@@ -1,2 +1,3 @@
 bs4
 openapi-codec
+sqlite3

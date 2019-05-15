@@ -6,8 +6,27 @@ import codecs
 class DataBase:
 	def __init__(self, database):
 		self.conn = sqlite3.connect(database)
-		self.c = self.conn.cursor()
+		self.curr = self.conn.cursor()
 		print("Connected to db.")
+
+	def insert_index_word(self, text):
+		self.curr.execute('INSERT INTO IndexWord (word) VALUES (?)', (text))
+		print("Adding index word: ", text + "\n")
+
+	def insert_posting(self, w, doc, freq, idxs, word_fk):
+		self.curr.execute('INSERT INTO Posting (word, documentName, frequency, indexes, word) VALUES (?, ?, ?, ?, ?)', (w, doc, freq, idxs, word_fk))
+		print("Adding posting: ", w + " " + doc + " " + str(freq) + " " + idxs + " " + word_fk + "\n")
+		self.commit_db()
+
+	def get_all_index_word(self):
+		self.curr.execute('SELECT * FROM IndexWord')
+		data = self.curr.fetchall()
+		print("Data from indexWord: ", data)
+
+	def get_all_posting(self):
+		self.curr.execute('SELECT * FROM Posting')
+		data = self.curr.fetchall()
+		print("Data from posting: ", data)
 
 	def commit_db(self):
 		self.conn.commit()
@@ -20,9 +39,14 @@ class DataBase:
 class FileRead:
 	def __init__(self, path):
 		self.path = path
+		"""
+			Dictionary for extracted text from html files:
+			'dir_name' : {'website_name' : 'html_text'}
+		"""
 		self.html_content_data = {}
 
 	def get_data(self):
+		print("Fetching data ...")
 		for root, dirs, files in os.walk(self.path, topdown=False):
 			domain_key = root.split('/')[2]
 			if domain_key != '':
@@ -56,4 +80,16 @@ if __name__ == "__main__":
 	# print(file_read.html_content_data)
 
 	database = DataBase('db.sqlite')
+	
+	""" 
+	DB CHECK:
+
+	database.get_all_index_word()
+	database.get_all_posting()
+	database.insert_index_word("text")
+	database.insert_posting("t1", "t2", 3, "t3", "text")
+	database.get_all_index_word()
+	database.get_all_posting()
+
+	"""
 	
