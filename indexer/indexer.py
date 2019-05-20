@@ -90,7 +90,6 @@ class FileRead:
 						html[name] = tokenized_text
 						
 				self.html_content_data[domain_key] = html
-		self.remove_stopwords()
 
 	def remove_stopwords(self, content):
 		""" Function that removes punctuation and stopwords from website content.
