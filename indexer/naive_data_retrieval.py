@@ -48,7 +48,7 @@ if __name__ == "__main__":
     print("")
 
     elapsed_time = time.time() - start_time
-    print("Results found in " + str(elapsed_time) + " s.")
+    print("Results found in " + str(elapsed_time) + "s.")
     print("")
 
     print("Frequencies Document                                  Snippet")
@@ -64,63 +64,64 @@ if __name__ == "__main__":
             print(" ", end="")
         content = get_html_content(path, filename)
         content_list = content.split("\n")
-        if value > 5:
-            n = 5
-        else:
-            n = value
 
         stevec = 0
+        snippet = ""
         for cl in content_list:
             content_list_list = cl.split(" ")
             used_words = []
             last_word = 0
             for ql in range(len(query_list)):
                 for cll in range(len(content_list_list)):
-                    if query_list[ql] == (content_list_list[cll]).lower() and cll not in used_words and stevec < 5:
+                    if query_list[ql] in (content_list_list[cll]).lower() and cll not in used_words and stevec < 5:
                         stevec = stevec + 1
                         if cll - 3 == 0:
-                            print(
-                                content_list_list[cll - 3] + " " + content_list_list[cll - 2] + " " + content_list_list[
-                                    cll - 1] + " ", end="")
+                            snippet = snippet + content_list_list[cll - 3] + " " + content_list_list[cll - 2] + " " + \
+                                      content_list_list[cll - 1] + " "
                         elif cll - 3 > 0:
-                            print("... " + content_list_list[cll - 3] + " " + content_list_list[cll - 2] + " " +
-                                  content_list_list[cll - 1] + " ", end="")
+                            if len(snippet) >= 4 and "... " == snippet[(len(snippet) - 4) : len(snippet)]:
+                                snippet = snippet + content_list_list[cll - 3] + " " + content_list_list[
+                                    cll - 2] + " " + content_list_list[cll - 1] + " "
+                            else:
+                                snippet = snippet + "... " + content_list_list[cll - 3] + " " + content_list_list[
+                                    cll - 2] + " " + content_list_list[cll - 1] + " "
                         elif cll - 2 == 0:
-                            print(content_list_list[cll - 2] + " " + content_list_list[cll - 1] + " ", end="")
+                            snippet = snippet + content_list_list[cll - 2] + " " + content_list_list[cll - 1] + " "
                         elif cll - 1 == 0:
-                            print(content_list_list[cll - 1] + " ", end="")
-                        print(content_list_list[cll] + " ", end="")
+                            snippet = snippet +content_list_list[cll - 1] + " "
+                        snippet = snippet + content_list_list[cll] + " "
                         used_words.append(cll)
                         last_word = cll
-                        if ql + 1 < len(query_list) and cll + 1 < len(content_list_list) and query_list[ql + 1] == (
+                        if ql + 1 < len(query_list) and cll + 1 < len(content_list_list) and query_list[ql + 1] in (
                                 content_list_list[cll + 1]).lower() and cll + 1 not in used_words:
-                            print(content_list_list[cll + 1] + " ", end="")
+                            snippet = snippet + content_list_list[cll + 1] + " "
                             used_words.append(cll + 1)
                             last_word = cll + 1
-                            if ql + 2 < len(query_list) and cll + 2 < len(content_list_list) and query_list[ql + 2] == (
+                            if ql + 2 < len(query_list) and cll + 2 < len(content_list_list) and query_list[ql + 2] in (
                                     content_list_list[cll + 2]).lower() and cll + 2 not in used_words:
-                                print(content_list_list[cll + 2] + " ", end="")
+                                snippet = snippet + content_list_list[cll + 2] + " "
                                 used_words.append(cll + 2)
                                 last_word = cll + 2
                                 if ql + 3 < len(query_list) and cll + 3 < len(content_list_list) and query_list[
-                                    ql + 3] == (content_list_list[cll + 3]).lower() and cll + 3 not in used_words:
-                                    print(content_list_list[cll + 3] + " ", end="")
+                                    ql + 3] in (content_list_list[cll + 3]).lower() and cll + 3 not in used_words:
+                                    snippet = snippet + content_list_list[cll + 3] + " "
                                     used_words.append(cll + 3)
                                     last_word = cll + 3
                                     if ql + 4 < len(query_list) and cll + 4 < len(content_list_list) and query_list[
-                                        ql + 4] == (content_list_list[cll + 4]).lower() and cll + 4 not in used_words:
-                                        print(content_list_list[cll + 4] + " ", end="")
+                                        ql + 4] in (content_list_list[cll + 4]).lower() and cll + 4 not in used_words:
+                                        snippet = snippet + content_list_list[cll + 4] + " "
                                         used_words.append(cll + 4)
                                         last_word = cll + 4
                         if last_word + 1 == len(content_list_list) - 1:
-                            print(content_list_list[last_word + 1] + " ", end="")
+                            snippet = snippet + content_list_list[last_word + 1] + " "
                         elif last_word + 2 == len(content_list_list) - 1:
-                            print(content_list_list[last_word + 1] + " " + content_list_list[last_word + 2] + " ",
-                                  end="")
+                            snippet = snippet + content_list_list[last_word + 1] + " " + content_list_list[
+                                last_word + 2] + " "
                         elif last_word + 3 == len(content_list_list) - 1:
-                            print(content_list_list[last_word + 1] + " " + content_list_list[last_word + 2] + " " +
-                                  content_list_list[last_word + 3] + " ", end="")
+                            snippet = snippet + content_list_list[last_word + 1] + " " + content_list_list[
+                                last_word + 2] + " " + content_list_list[last_word + 3] + " "
                         elif last_word + 3 < len(content_list_list) - 1:
-                            print(content_list_list[last_word + 1] + " " + content_list_list[last_word + 2] + " " +
-                                  content_list_list[last_word + 3] + " ... ", end="")
-        print("")
+                            snippet = snippet + content_list_list[last_word + 1] + " " + content_list_list[
+                                last_word + 2] + " " + content_list_list[last_word + 3] + " ... "
+
+        print(snippet)
