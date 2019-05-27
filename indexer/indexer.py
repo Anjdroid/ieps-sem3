@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 import codecs
 import nltk
 from nltk.corpus import stopwords
+import time
 
 
 class DataBase:
@@ -33,6 +34,12 @@ class DataBase:
 		data = self.curr.fetchall()
 		print("Data from posting: ", data)
 
+	def get_querry_from_posting(self, word1, word2, word3, word4, word5):
+		self.curr.execute('SELECT p.documentName AS docName, SUM(frequency) AS freq, GROUP_CONCAT(indexes) AS idxs FROM Posting p WHERE p.word IN (?, ?, ?, ?, ?) GROUP BY p.documentName ORDER BY freq DESC;',(word1, word2, word3, word4, word5))
+		data = self.curr.fetchall()
+		print("Data from querry: ", data)
+		return data
+
 	def commit_db(self):
 		self.conn.commit()
 		print("Data is commited.")
@@ -52,6 +59,7 @@ class FileRead:
 		"""
 		self.html_content_data = {}
 		self.html_tokenized_data = {}
+		self.html_content = {}
 		"""
 		TODO:
 		when running the code for the first time UNCOMMENT:
@@ -91,14 +99,16 @@ class FileRead:
 						""" perform data indexing """
 						self.data_index.do_indexing(domain_key, name, html_text, tokenized_text)
 
+						self.html_content[domain_key + "/" + name] = html_text
 						#
 						# OPTIONAL BREAK FOR TESTING (only one document)
-						break
+
+						# break
 						#
 
 						# not sure we still need to save all this?
 						html_tokenized[name] = tokenized_text
-						html[name] = tokenized_text
+						html[name] = html_text
 				# not sure we still need to save all this?
 				self.html_tokenized_data[domain_key] = html_tokenized
 				self.html_content_data[domain_key] = html
@@ -121,7 +131,7 @@ class FileRead:
 	def remove_stopwords(self, content):
 		""" Function that removes punctuation and stopwords from website content.
 			Also changes words to lowercase. """
-		punctuation = ['.', ',','!','?','-','>','<',':',';',')','(','--','–', '/',"''",'']
+		punctuation = ['.', ',','!','?','-','>','<',':',';',')','(','--','–', '/',"''",'','|','...','``']
 		new_content_lcase = [x.lower() for x in content if x not in punctuation]
 		new_content = list(filter(lambda x: True if x+" " not in \
 						self.stopwords else False, new_content_lcase))
@@ -139,7 +149,8 @@ class DataIndexing:
 
 	def word_freq(self, word, content):
 		# returns count of word in content
-		return content.count(word)
+		new_content_lcase = [x.lower() for x in content]
+		return new_content_lcase.count(word)
 
 	def list_to_str(self, idxs):
 		# returns string of indxs '5,6,10'
@@ -149,7 +160,7 @@ class DataIndexing:
 		for word in content_tk:
 			# get all indexes of word from original content
 			idxs = [idx for idx, w in enumerate(content_og) \
-					if word == w]
+					if word == w.lower()]
 			# get frequency of word from original content
 			freq = self.word_freq(word, content_og)
 					
@@ -158,6 +169,30 @@ class DataIndexing:
 			self.db.insert_posting(word, page_dir+'/'+p, freq, self.list_to_str(idxs), word)
 			# TODO: CHECK DB?
 
+def data_retrival_with_index(querried_data, html_dict):
+
+	return_data = ""
+	for el in querried_data:
+		querried_indices = el[2].split(',') #string of indices
+		querried_url = el[0]  #folder/url
+		querried_freq = el[1] #frequency
+		result = ""
+		document = html_dict[querried_url]
+		for i in range(querried_freq):
+			if (i > 5): break
+			querried_i = int(querried_indices[i])
+			result = result + " ... " +\
+					 document[querried_i - 3] + " " +\
+					 document[querried_i - 2] + " " + \
+					 document[querried_i - 1] + " " + \
+					 document[querried_i] + " " + \
+					 document[querried_i + 1] + " " + \
+					 document[querried_i + 2] + " " + \
+					 document[querried_i + 3]
+
+		#print('{:11} {:45} {} ...'.format(str(querried_freq), querried_url, result))
+		return_data += '{:11} {:45} {} ...\n'.format(str(querried_freq), querried_url, result)
+	return return_data
 
 
 if __name__ == "__main__":
@@ -183,6 +218,51 @@ if __name__ == "__main__":
 	# check what is in db
 	database.get_all_index_word()
 	database.get_all_posting()
+
+
+	html_dict = file_read.html_content
+
+	##Query for predelovalne dejavosti:
+	start = time.time()
+	querried_data = database.get_querry_from_posting('predelovalne', 'dejavnosti', '', '', '')
+
+	result = data_retrival_with_index(querried_data, html_dict)
+	end = time.time()
+	print('Results for a query: "predelovalne dejavnosti"\n')
+	print("Result found in ", round((end - start) * 1000), "ms.\n")
+	print('Frequencies Document                                       Snippet')
+	print(
+		'----------- ---------------------------------------------- -----------------------------------------------------------')
+	print(result)
+
+	##Query for trgovina:
+	start = time.time()
+	querried_data = database.get_querry_from_posting('trgovina','','', '', '')
+
+	result = data_retrival_with_index(querried_data, html_dict)
+	end = time.time()
+	print('Results for a query: "trgovina"\n')
+	print("Result found in ", round((end - start)*1000),"ms.\n")
+	print('Frequencies Document                                       Snippet')
+	print('----------- ---------------------------------------------- -----------------------------------------------------------')
+	print(result)
+
+	##Query for social services:
+	start = time.time()
+	querried_data = database.get_querry_from_posting('social', 'services', '', '', '')
+
+	result = data_retrival_with_index(querried_data, html_dict)
+	end = time.time()
+	print('Results for a query: "social services"\n')
+	print("Result found in ", round((end - start) * 1000), "ms.\n")
+	print('Frequencies Document                                       Snippet')
+	print(
+		'----------- ---------------------------------------------- -----------------------------------------------------------')
+	print(result)
+
+
+	#print(html_dict['evem.gov.si/evem.gov.si.356.html'][212]) #tole izpise ki, ceprou je querry za trgovino in indeks rgovine bi mogu bit 212
+	# tole se izpise pri querry za trgovino tudi, kar je narobe ideje zakaj je tko ? ... - tehtnice, ki jih uporablja za...
 
 	""" 
 	DB CHECK:
