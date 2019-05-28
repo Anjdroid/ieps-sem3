@@ -37,7 +37,7 @@ class DataBase:
 	def get_querry_from_posting(self, word1, word2, word3, word4, word5):
 		self.curr.execute('SELECT p.documentName AS docName, SUM(frequency) AS freq, GROUP_CONCAT(indexes) AS idxs FROM Posting p WHERE p.word IN (?, ?, ?, ?, ?) GROUP BY p.documentName ORDER BY freq DESC;',(word1, word2, word3, word4, word5))
 		data = self.curr.fetchall()
-		print("Data from querry: ", data)
+		# print("Data from querry: ", data)
 		return data
 
 	def commit_db(self):
@@ -98,7 +98,7 @@ class FileRead:
 						tokenized_text = self.remove_stopwords(html_text)
 
 						""" perform data indexing """
-						####self.data_index.do_indexing(domain_key, name, html_text, tokenized_text)
+						## self.data_index.do_indexing(domain_key, name, html_text, tokenized_text)
 
 						self.html_content[domain_key + "/" + name] = html_text
 
@@ -118,7 +118,7 @@ class FileRead:
 		# get text
 		text = soup.get_text()
 
-		# break into lines and remove leading and trailing space on each
+		# break into lines and remove leading and trailing space
 		lines = (line.strip() for line in text.splitlines())
 		# break multi-headlines into a line each
 		chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
@@ -164,7 +164,6 @@ class DataIndexing:
 			self.db.insert_index_word(word)
 			self.db.insert_posting(word, page_dir+'/'+p, freq, self.list_to_str(idxs), word)
 
-
 def data_retrival_with_index(querried_data, html_dict):
 
 	return_data = ""
@@ -196,6 +195,13 @@ def data_retrival_with_index(querried_data, html_dict):
 		return_data += '{:11} {:45} {} ...\n'.format(str(querried_freq), querried_url, result)
 	return return_data
 
+def process_query(query, file_read):
+	""" preprocessing for query """
+	q = ["","","","",""]
+	query = file_read.remove_stopwords(nltk.word_tokenize(query))
+	for i in range(len(query)):
+		q[i] = query[i]
+	return q
 
 if __name__ == "__main__":
 	print("I am alive.")
@@ -217,7 +223,10 @@ if __name__ == "__main__":
 
 	##Query for predelovalne dejavosti:
 	start = time.time()
-	querried_data = database.get_querry_from_posting('predelovalne', 'dejavnosti', '', '', '')
+	query = "predelovalne dejavosti"
+	query = process_query(query, file_read)
+
+	querried_data = database.get_querry_from_posting(query[0], query[1], query[2], query[3], query[4])
 
 	result = data_retrival_with_index(querried_data, html_dict)
 	end = time.time()
@@ -230,7 +239,10 @@ if __name__ == "__main__":
 
 	##Query for trgovina:
 	start = time.time()
-	querried_data = database.get_querry_from_posting('trgovina','','', '', '')
+	query = "trgovina"
+	query = process_query(query, file_read)
+
+	querried_data = database.get_querry_from_posting(query[0], query[1], query[2], query[3], query[4])
 
 	result = data_retrival_with_index(querried_data, html_dict)
 	end = time.time()
@@ -242,7 +254,10 @@ if __name__ == "__main__":
 
 	##Query for social services:
 	start = time.time()
-	querried_data = database.get_querry_from_posting('social', 'services', '', '', '')
+	query = "social services"
+	query = process_query(query, file_read)
+
+	querried_data = database.get_querry_from_posting(query[0], query[1], query[2], query[3], query[4])
 
 	result = data_retrival_with_index(querried_data, html_dict)
 	end = time.time()
@@ -255,7 +270,10 @@ if __name__ == "__main__":
 
 	##Query for statistični urad RS:
 	start = time.time()
-	querried_data = database.get_querry_from_posting('statistični', 'urad', 'rs', '', '')
+	query = "statistični urad RS"
+	query = process_query(query, file_read)
+
+	querried_data = database.get_querry_from_posting(query[0], query[1], query[2], query[3], query[4])
 
 	result = data_retrival_with_index(querried_data, html_dict)
 	end = time.time()
@@ -267,7 +285,10 @@ if __name__ == "__main__":
 
 	##Query for otroški dodatki in državna štipendija:
 	start = time.time()
-	querried_data = database.get_querry_from_posting('otroški', 'dodatki', 'državna', 'štipendija', '')
+	query = "otroški dodatki in državna štipendija"
+	query = process_query(query, file_read)
+
+	querried_data = database.get_querry_from_posting(query[0], query[1], query[2], query[3], query[4])
 
 	result = data_retrival_with_index(querried_data, html_dict)
 	end = time.time()
@@ -280,7 +301,9 @@ if __name__ == "__main__":
 
 	##Query for fakulteta:
 	start = time.time()
-	querried_data = database.get_querry_from_posting('fakulteta', '', '', '', '')
+	query = "fakulteta"
+	query = process_query(query, file_read)
+	querried_data = database.get_querry_from_posting(query[0], query[1], query[2], query[3], query[4])
 
 	result = data_retrival_with_index(querried_data, html_dict)
 	end = time.time()
