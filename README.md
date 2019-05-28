@@ -9,10 +9,9 @@ The goal of this assignment was to implement data preprocessing and indexing of 
 ## How to setup and run
 
 - donwload zip or clone the project
+- go into folder indexer
 
 ### install required packages
-
-- go into folder indexer
 
 $ pip install -r requirements.txt
 
