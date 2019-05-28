@@ -57,7 +57,7 @@ def data_retrieval(query):
                 counter = 0
                 for x in query_list:
                     all_matches = re.findall(r'\b%s\b' % x, content)
-                    counter = len(all_matches)
+                    counter = counter + len(all_matches)
 
                 if counter > 0:
                     freq[r + "/" + file] = counter
