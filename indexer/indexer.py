@@ -93,17 +93,18 @@ class FileRead:
 						# save original tokenized data
 						html_text = nltk.word_tokenize(text)
 
+
 						# tokenize text && remove stopwords && normalization
 						tokenized_text = self.remove_stopwords(html_text)
 
 						""" perform data indexing """
-						self.data_index.do_indexing(domain_key, name, html_text, tokenized_text)
+						####self.data_index.do_indexing(domain_key, name, html_text, tokenized_text)
 
 						self.html_content[domain_key + "/" + name] = html_text
 						#
 						# OPTIONAL BREAK FOR TESTING (only one document)
 
-						# break
+						#break
 						#
 
 						# not sure we still need to save all this?
@@ -115,13 +116,14 @@ class FileRead:
 
 	def get_html_content(self, root, name):
 		html_content = codecs.open(root+"/"+name, 'r', 'utf-8') 
-		soup = BeautifulSoup(html_content)
+		soup = BeautifulSoup(html_content, 'html.parser')
 		# remove all script and style elements
 		for script in soup(["script", "style"]):
 		    script.extract()
 
 		# get text
 		text = soup.get_text()
+
 		# break into lines and remove leading and trailing space on each
 		lines = (line.strip() for line in text.splitlines())
 		# break multi-headlines into a line each
@@ -131,7 +133,7 @@ class FileRead:
 	def remove_stopwords(self, content):
 		""" Function that removes punctuation and stopwords from website content.
 			Also changes words to lowercase. """
-		punctuation = ['.', ',','!','?','-','>','<',':',';',')','(','--','–', '/',"''",'','|','...','``']
+		punctuation = ['.', ',','!','?','-','>','<',':',';',')','(','--','–', '/',"''",'','|','...','``','»','«']
 		new_content_lcase = [x.lower() for x in content if x not in punctuation]
 		new_content = list(filter(lambda x: True if x+" " not in \
 						self.stopwords else False, new_content_lcase))
@@ -181,6 +183,8 @@ def data_retrival_with_index(querried_data, html_dict):
 		for i in range(querried_freq):
 			if (i > 5): break
 			querried_i = int(querried_indices[i])
+			#print(querried_i)
+			#print(querried_i -3)
 			result = result + " ... " +\
 					 document[querried_i - 3] + " " +\
 					 document[querried_i - 2] + " " + \
@@ -256,13 +260,48 @@ if __name__ == "__main__":
 	print('Results for a query: "social services"\n')
 	print("Result found in ", round((end - start) * 1000), "ms.\n")
 	print('Frequencies Document                                       Snippet')
+	print('----------- ---------------------------------------------- -----------------------------------------------------------')
+	print(result)
+
+	##Query for statistični urad RS:
+	start = time.time()
+	querried_data = database.get_querry_from_posting('statistični', 'urad', 'rs', '', '')
+
+	result = data_retrival_with_index(querried_data, html_dict)
+	end = time.time()
+	print('Results for a query: "statistični urad RS"\n')
+	print("Result found in ", round((end - start) * 1000), "ms.\n")
+	print('Frequencies Document                                       Snippet')
 	print(
 		'----------- ---------------------------------------------- -----------------------------------------------------------')
 	print(result)
 
+	##Query for otroški dodatki in državna štipendija:
+	start = time.time()
+	querried_data = database.get_querry_from_posting('otroški', 'dodatki', 'državna', 'štipendija', '')
 
-	#print(html_dict['evem.gov.si/evem.gov.si.356.html'][212]) #tole izpise ki, ceprou je querry za trgovino in indeks rgovine bi mogu bit 212
-	# tole se izpise pri querry za trgovino tudi, kar je narobe ideje zakaj je tko ? ... - tehtnice, ki jih uporablja za...
+	result = data_retrival_with_index(querried_data, html_dict)
+	end = time.time()
+	print('Results for a query: "otroški dodatki in državne štipendije"\n')
+	print("Result found in ", round((end - start) * 1000), "ms.\n")
+	print('Frequencies Document                                       Snippet')
+	print(
+		'----------- ---------------------------------------------- -----------------------------------------------------------')
+	print(result)
+
+	##Query for fakulteta:
+	start = time.time()
+	querried_data = database.get_querry_from_posting('fakulteta', '', '', '', '')
+
+	result = data_retrival_with_index(querried_data, html_dict)
+	end = time.time()
+	print('Results for a query: "fakulteta"\n')
+	print("Result found in ", round((end - start) * 1000), "ms.\n")
+	print('Frequencies Document                                       Snippet')
+	print(
+		'----------- ---------------------------------------------- -----------------------------------------------------------')
+	print(result)
+
 
 	""" 
 	DB CHECK:
