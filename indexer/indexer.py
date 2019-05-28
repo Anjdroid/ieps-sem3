@@ -203,6 +203,8 @@ def process_query(query, file_read):
 		q[i] = query[i]
 	return q
 
+
+
 if __name__ == "__main__":
 	print("I am alive.")
 
@@ -233,8 +235,7 @@ if __name__ == "__main__":
 	print('Results for a query: "predelovalne dejavnosti"\n')
 	print("Result found in ", round((end - start) * 1000), "ms.\n")
 	print('Frequencies Document                                       Snippet')
-	print(
-		'----------- ---------------------------------------------- -----------------------------------------------------------')
+	print('----------- ---------------------------------------------- -----------------------------------------------------------')
 	print(result)
 
 	##Query for trgovina:
