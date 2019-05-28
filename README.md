@@ -9,10 +9,9 @@ The goal of this assignment was to implement data preprocessing and indexing of 
 ## How to setup and run
 
 - donwload zip or clone the project
+- go into folder indexer
 
 ### install required packages
-
-- go into folder indexer
 
 $ pip install -r requirements.txt
 
@@ -20,8 +19,8 @@ $ pip install -r requirements.txt
 - to folder: /home/user/nltk_data/corpora/stopwords/
 
 - when running the code for the first time UNCOMMENT in file indexer.py (line 67,68):
-  nltk.download('punkt')
-	nltk.download('stopwords')
+  - nltk.download('punkt')
+  - nltk.download('stopwords')
   
 - for data retrieval with inverted index run:
 ```
