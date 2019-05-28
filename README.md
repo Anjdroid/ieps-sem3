@@ -19,8 +19,8 @@ $ pip install -r requirements.txt
 - to folder: /home/user/nltk_data/corpora/stopwords/
 
 - when running the code for the first time UNCOMMENT in file indexer.py (line 67,68):
-  nltk.download('punkt')
-	nltk.download('stopwords')
+  - nltk.download('punkt')
+  - nltk.download('stopwords')
   
 - for data retrieval with inverted index run:
 ```
