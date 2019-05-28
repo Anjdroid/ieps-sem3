@@ -1,9 +1,33 @@
-# ieps-sem3
+# IEPS Seminar 3
 
-## install required packages
+The goal of this assignment was to implement data preprocessing and indexing of given HTML documents and perform querying against it using two approaches: using inverted index and naive data retrieval.
 
-$ pip3 install -r requirements.txt
+## Prerequisites
 
-## create db command
+- python version >= 3.6
 
-$  sqlite3 db.sqlite < db.sql
+## How to setup and run
+
+- donwload zip or clone the project
+
+### install required packages
+
+- go into folder indexer
+
+$ pip install -r requirements.txt
+
+- add file: slovenian (located in the base directory) 
+- to folder: /home/user/nltk_data/corpora/stopwords/
+
+- when running the code for the first time UNCOMMENT in file indexer.py (line 67,68):
+  nltk.download('punkt')
+	nltk.download('stopwords')
+  
+- for data retrieval with inverted index run:
+```
+python indexer.py
+```
+- for naive data retrieval run:
+```
+python naive_data_retrieval.py.py
+```
