@@ -172,7 +172,7 @@ if __name__ == "__main__":
     query = "statistični urad RS"
     data_retrieval(query)
 
-    query = "otroški dodatki in državne štipendije"
+    query = "otroški dodatki in državna štipendija"
     data_retrieval(query)
 
     query = "fakulteta"
