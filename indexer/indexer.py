@@ -176,25 +176,29 @@ def data_retrival_with_index(querried_data, html_dict):
 	return_data = ""
 	for el in querried_data:
 		querried_indices = el[2].split(',') #string of indices
+		indices = [int(i) for i in querried_indices]
+		indices.sort()
 		querried_url = el[0]  #folder/url
 		querried_freq = el[1] #frequency
 		result = ""
 		document = html_dict[querried_url]
-		for i in range(querried_freq):
-			if (i > 5): break
-			querried_i = int(querried_indices[i])
-			#print(querried_i)
-			#print(querried_i -3)
-			result = result + " ... " +\
-					 document[querried_i - 3] + " " +\
-					 document[querried_i - 2] + " " + \
-					 document[querried_i - 1] + " " + \
-					 document[querried_i] + " " + \
-					 document[querried_i + 1] + " " + \
-					 document[querried_i + 2] + " " + \
-					 document[querried_i + 3]
+		doc_length = len(document)
+		i = 0
+		while i < querried_freq:
+			if (i > 4): break
+			querried_i = indices[i]
+			while((i+1) < len(indices) and querried_i + 3 >= indices[i+1]):
+				i += 1
+			result = result + " ... "
+			if(querried_i - 3 >= 0): result += document[querried_i - 3] + " "
+			if(querried_i - 2 >= 0): result += document[querried_i - 2] + " "
+			if(querried_i - 1 >= 0): result += document[querried_i - 1] + " "
+			result += document[querried_i] + " "
+			if (querried_i + 1 < doc_length): result += document[querried_i + 1] + " "
+			if (querried_i + 2 < doc_length): result +=	document[querried_i + 2] + " "
+			if (querried_i + 3 < doc_length): result +=	document[querried_i + 3]
+			i += 1
 
-		#print('{:11} {:45} {} ...'.format(str(querried_freq), querried_url, result))
 		return_data += '{:11} {:45} {} ...\n'.format(str(querried_freq), querried_url, result)
 	return return_data
 
@@ -220,11 +224,13 @@ if __name__ == "__main__":
 	file_read.get_data()
 
 	# check what is in db
-	database.get_all_index_word()
-	database.get_all_posting()
+	#database.get_all_index_word()
+	#database.get_all_posting()
 
 
 	html_dict = file_read.html_content
+
+	######Querrying
 
 	##Query for predelovalne dejavosti:
 	start = time.time()
@@ -263,6 +269,7 @@ if __name__ == "__main__":
 	print('----------- ---------------------------------------------- -----------------------------------------------------------')
 	print(result)
 
+
 	##Query for statistični urad RS:
 	start = time.time()
 	querried_data = database.get_querry_from_posting('statistični', 'urad', 'rs', '', '')
@@ -272,8 +279,7 @@ if __name__ == "__main__":
 	print('Results for a query: "statistični urad RS"\n')
 	print("Result found in ", round((end - start) * 1000), "ms.\n")
 	print('Frequencies Document                                       Snippet')
-	print(
-		'----------- ---------------------------------------------- -----------------------------------------------------------')
+	print('----------- ---------------------------------------------- -----------------------------------------------------------')
 	print(result)
 
 	##Query for otroški dodatki in državna štipendija:
@@ -285,9 +291,9 @@ if __name__ == "__main__":
 	print('Results for a query: "otroški dodatki in državne štipendije"\n')
 	print("Result found in ", round((end - start) * 1000), "ms.\n")
 	print('Frequencies Document                                       Snippet')
-	print(
-		'----------- ---------------------------------------------- -----------------------------------------------------------')
+	print('----------- ---------------------------------------------- -----------------------------------------------------------')
 	print(result)
+
 
 	##Query for fakulteta:
 	start = time.time()
