@@ -101,16 +101,10 @@ class FileRead:
 						####self.data_index.do_indexing(domain_key, name, html_text, tokenized_text)
 
 						self.html_content[domain_key + "/" + name] = html_text
-						#
-						# OPTIONAL BREAK FOR TESTING (only one document)
 
-						#break
-						#
-
-						# not sure we still need to save all this?
 						html_tokenized[name] = tokenized_text
 						html[name] = html_text
-				# not sure we still need to save all this?
+				
 				self.html_tokenized_data[domain_key] = html_tokenized
 				self.html_content_data[domain_key] = html
 
@@ -169,7 +163,7 @@ class DataIndexing:
 			# now this has to be saved to DB
 			self.db.insert_index_word(word)
 			self.db.insert_posting(word, page_dir+'/'+p, freq, self.list_to_str(idxs), word)
-			# TODO: CHECK DB?
+
 
 def data_retrival_with_index(querried_data, html_dict):
 
@@ -209,12 +203,6 @@ if __name__ == "__main__":
 	# initialize db
 	database = DataBase('db.sqlite')
 
-	"""
-	# check what is in db
-	database.get_all_index_word()
-	database.get_all_posting()
-	"""
-
 	# initialize dataIndexing class
 	data_index = DataIndexing(database)
 
@@ -222,11 +210,6 @@ if __name__ == "__main__":
 	file_read = FileRead('../data/', data_index)
 	# fetch data and perform data operations
 	file_read.get_data()
-
-	# check what is in db
-	#database.get_all_index_word()
-	#database.get_all_posting()
-
 
 	html_dict = file_read.html_content
 
@@ -307,19 +290,6 @@ if __name__ == "__main__":
 	print(
 		'----------- ---------------------------------------------- -----------------------------------------------------------')
 	print(result)
-
-
-	""" 
-	DB CHECK:
-
-	database.get_all_index_word()
-	database.get_all_posting()
-	database.insert_index_word("text")
-	database.insert_posting("t1", "t2", 3, "t3", "text")
-	database.get_all_index_word()
-	database.get_all_posting()
-
-	"""
 
 	# close db connection
 	database.close_conn()
