@@ -207,7 +207,7 @@ if __name__ == "__main__":
 	print("I am alive.")
 
 	# initialize db
-	database = DataBase('db.sqlite')
+	database = DataBase('../inverted-index.db')
 
 	# initialize dataIndexing class
 	data_index = DataIndexing(database)
