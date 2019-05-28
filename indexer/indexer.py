@@ -225,7 +225,7 @@ if __name__ == "__main__":
 
 	##Query for predelovalne dejavosti:
 	start = time.time()
-	query = "predelovalne dejavosti"
+	query = "predelovalne dejavnosti"
 	query = process_query(query, file_read)
 
 	querried_data = database.get_querry_from_posting(query[0], query[1], query[2], query[3], query[4])
@@ -293,7 +293,7 @@ if __name__ == "__main__":
 
 	result = data_retrival_with_index(querried_data, html_dict)
 	end = time.time()
-	print('Results for a query: "otroški dodatki in državne štipendije"\n')
+	print('Results for a query: "otroški dodatki in državna štipendija"\n')
 	print("Result found in ", round((end - start) * 1000), "ms.\n")
 	print('Frequencies Document                                       Snippet')
 	print('----------- ---------------------------------------------- -----------------------------------------------------------')
