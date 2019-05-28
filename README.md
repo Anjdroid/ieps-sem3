@@ -28,5 +28,5 @@ python indexer.py
 ```
 - for naive data retrieval run:
 ```
-python naive_data_retrieval.py.py
+python naive_data_retrieval.py
 ```
