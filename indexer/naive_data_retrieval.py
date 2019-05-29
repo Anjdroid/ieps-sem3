@@ -24,16 +24,19 @@ def get_html_content(root, name):
     return '\n'.join(x for x in chunks if x)
 
 
-"""
-def remove_stopwords(words):
+def remove_punctuations(query):
     punctuation = ['.', ',', '!', '?', '-', '>', '<', ':', ';', ')', '(', '--', '–', '/', "''", '', '|', '...', '``',
                    '»', '«']
     for p in punctuation:
-        words = words.replace(p, "")
+        query = query.replace(p, "")
 
+    return query
+
+"""
+def remove_stopwords(query):
     sw = set(stopwords.words('slovenian'))
 
-    words_list = words.split(" ")
+    words_list = query.split(" ")
     new_word = ""
     for w in words_list:
         if w not in sw:
@@ -42,11 +45,11 @@ def remove_stopwords(words):
     return new_word
 """
 
-
 def data_retrieval(query):
     start_time = time.time()
 
-    new_query = query.replace(" in", "")
+    new_query = remove_punctuations(query)
+    new_query = new_query.replace(" in", "")
     query_list = (new_query.lower()).split(" ")
     freq = {}
 
