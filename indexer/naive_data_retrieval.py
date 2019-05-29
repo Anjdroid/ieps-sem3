@@ -146,9 +146,11 @@ def data_retrieval(query):
                             result = result + content_list_list[last_word + 1] + " " + content_list_list[
                                 last_word + 2] + " " + content_list_list[last_word + 3] + " ... "
 
+                        print(result)
+
         result = result + "\n"
 
-    print("Results for a query: \"" + query + "\"\n")
+    """print("Results for a query: \"" + query + "\"\n")
 
     elapsed_time = time.time() - start_time
     print("Results found in " + str(round(elapsed_time * 1000)) + "ms.\n")
@@ -156,7 +158,7 @@ def data_retrieval(query):
     print("Frequencies Document                                  Snippet")
     print(
         "----------- ----------------------------------------- -----------------------------------------------------------")
-    print(result)
+    print(result)"""
 
 
 if __name__ == "__main__":
