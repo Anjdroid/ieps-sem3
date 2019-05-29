@@ -8,7 +8,7 @@ The goal of this assignment was to implement data preprocessing and indexing of 
 
 ## How to setup and run
 
-- donwload zip or clone the project
+- download zip or clone the project
 - go into folder indexer
 
 ### install required packages
@@ -28,5 +28,5 @@ python indexer.py
 ```
 - for naive data retrieval run:
 ```
-python naive_data_retrieval.py.py
+python naive_data_retrieval.py
 ```
